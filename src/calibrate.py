@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import numpy as np
 
@@ -65,7 +67,7 @@ class Calibrator:
             cv2.drawChessboardCorners(image, self.pattern_size, corners, True)
 
             # Show image
-            cv2.imshow(f"Chessboard Corners: {filepath.split('/')[-1]}", image)
+            cv2.imshow(f"Chessboard Corners: {os.path.basename(filepath)}", image)
             cv2.waitKey(0)
 
         cv2.destroyAllWindows()
@@ -114,7 +116,10 @@ class Calibrator:
 
             # Show image side by side
             image_concat = np.concatenate((image, image_undistort), axis=1)
-            cv2.imshow(f"Distorted vs Undistorted Image: {filepath.split('/')[-1]}", image_concat)
+            cv2.imshow(
+                f"Distorted vs Undistorted Image: {os.path.basename(filepath)}",
+                image_concat,
+            )
             cv2.waitKey(0)
 
         cv2.destroyAllWindows()
