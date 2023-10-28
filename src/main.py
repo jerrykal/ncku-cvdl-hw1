@@ -35,7 +35,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             for file in filenames:
                 if file.endswith(("jpg", "png", "jpeg", "bmp")):
                     self.imgpaths.append(os.path.join(dirpath, file))
-        self.imgpaths.sort()
+
+        # Sort image paths
+        self.imgpaths.sort(key=lambda x: int(x.split("/")[-1].split(".")[0]))
 
         # Update calibrator
         self.calibrator.update_imgpaths(self.imgpaths)
