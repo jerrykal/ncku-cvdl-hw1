@@ -48,6 +48,9 @@ class Calibrator:
 
     def calibrate_camera(self) -> None:
         """Calibrate camera and store all relevant parameters."""
+        if len(self.imgpaths) == 0:
+            return
+
         # Prepare object points
         objp = np.zeros((np.prod(self.pattern_size), 3), np.float32)
         objp[:, :2] = np.indices(self.pattern_size).T.reshape(-1, 2)
