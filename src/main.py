@@ -1,5 +1,7 @@
 import os
 
+from PyQt5.QtCore import QRegExp
+from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow
 
 import calibrate
@@ -26,7 +28,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnQ14.clicked.connect(self.calibrator.print_distortion)
         self.btnQ15.clicked.connect(self.calibrator.show_undistort)
 
-    def load_folder(self):
+        # Set validator for Q2
+        regex = QRegExp("[a-zA-Z]+")
+        validator = QRegExpValidator(regex)
+        self.lineEditQ2.setValidator(validator)
+
+        # Q2
+        self.btnQ21.clicked.connect(
+            lambda word: self.calibrator.project_word(self.lineEditQ2.text())
+        )
+        self.btnQ22.clicked.connect(
+            lambda word: self.calibrator.project_word(
+                self.lineEditQ2.text(), vertical=True
+            )
+        )
+
     def load_folder(self) -> None:
         """Load a folder of images."""
         # Get image paths

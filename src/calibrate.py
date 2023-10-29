@@ -1,8 +1,10 @@
 import os
+from string import ascii_uppercase
 from typing import List
 
 import cv2
 import numpy as np
+from cv2.typing import Point
 
 
 class Calibrator:
@@ -13,10 +15,31 @@ class Calibrator:
         self.corners = []
         self.objpoints = []
         self.imgpoints = []
-        self.camera_matrix = []
-        self.dist_coeffs = []
+        self.camera_matrix: np.ndarray = np.zeros((3, 3))
+        self.dist_coeffs: np.ndarray = np.zeros((1, 5))
         self.rvecs = []
         self.tvecs = []
+
+        # Q2
+        fs = cv2.FileStorage(
+            os.path.join(
+                os.path.dirname(__file__), "Q2_lib", "alphabet_lib_onboard.txt"
+            ),
+            cv2.FILE_STORAGE_READ,
+        )
+        self.ar_alphabet = {}
+        for alphabet in ascii_uppercase:
+            self.ar_alphabet[alphabet] = fs.getNode(alphabet).mat()
+
+        fs = cv2.FileStorage(
+            os.path.join(
+                os.path.dirname(__file__), "Q2_lib", "alphabet_lib_vertical.txt"
+            ),
+            cv2.FILE_STORAGE_READ,
+        )
+        self.ar_alphabet_v = {}
+        for alphabet in ascii_uppercase:
+            self.ar_alphabet_v[alphabet] = fs.getNode(alphabet).mat()
 
     def update_imgpaths(self, imgpaths: List[str]) -> None:
         """Update image paths."""
@@ -40,6 +63,9 @@ class Calibrator:
                 self.imgpoints.append(corners)
                 self.corners.append(corners)
 
+        grayimg = cv2.imread(self.imgpaths[0], cv2.IMREAD_GRAYSCALE)
+        image_size = grayimg.shape[::-1]
+
         # Calibrate camera
         (
             _,
@@ -48,7 +74,7 @@ class Calibrator:
             self.rvecs,
             self.tvecs,
         ) = cv2.calibrateCamera(
-            self.objpoints, self.imgpoints, grayimg.shape[::-1], None, None  # type: ignore
+            self.objpoints, self.imgpoints, image_size, None, None  # type: ignore
         )
 
         # Set flag
@@ -61,7 +87,7 @@ class Calibrator:
 
         # Draw chessboard corners onto the image
         for filepath, corners in zip(self.imgpaths, self.corners):
-            image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+            image = cv2.imread(filepath, cv2.IMREAD_COLOR)
             cv2.drawChessboardCorners(image, self.pattern_size, corners, True)
 
             # Show image
@@ -110,11 +136,49 @@ class Calibrator:
         # Show undistorted images
         for filepath in self.imgpaths:
             image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
-            image_undistort = cv2.undistort(image, self.camera_matrix, self.dist_coeffs)  # type: ignore
+            image_undistort = cv2.undistort(image, self.camera_matrix, self.dist_coeffs)
 
             # Show image side by side
             image_concat = np.concatenate((image, image_undistort), axis=1)
             cv2.imshow("Distorted vs Undistorted Image", image_concat)
+            cv2.waitKey(0)
+
+        cv2.destroyAllWindows()
+
+    def project_word(self, word: str, vertical: bool = False) -> None:
+        """Project a word onto the chessboard."""
+        if not self.calibrated:
+            self.calibrate_camera()
+
+        word = word.upper()
+        for i, filepath in enumerate(self.imgpaths):
+            image = cv2.imread(filepath, cv2.IMREAD_COLOR)
+
+            # Project word onto the chessboard
+            for j, alphabet in enumerate(word):
+                translation = np.array([7 - 3 * (j % 3), 5 - 3 * (j // 3), 0])
+                for line in (
+                    self.ar_alphabet[alphabet]
+                    if not vertical
+                    else self.ar_alphabet_v[alphabet]
+                ):
+                    line_pts = cv2.projectPoints(
+                        (line + translation).astype(np.float32),
+                        self.rvecs[i],
+                        self.tvecs[i],
+                        self.camera_matrix,
+                        self.dist_coeffs,
+                    )[0]
+                    cv2.line(
+                        image,
+                        np.ravel(line_pts[0]).astype(int),  # type: ignore
+                        np.ravel(line_pts[1]).astype(int),  # type: ignore
+                        (0, 0, 255),
+                        10,
+                    )
+
+            # Show image
+            cv2.imshow("AR", image)
             cv2.waitKey(0)
 
         cv2.destroyAllWindows()
