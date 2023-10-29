@@ -1,11 +1,12 @@
 import os
+from typing import List
 
 import cv2
 import numpy as np
 
 
 class Calibrator:
-    def __init__(self, imgpaths):
+    def __init__(self, imgpaths: List[str]) -> None:
         self.imgpaths = imgpaths
         self.calibrated = False
         self.pattern_size = (11, 8)
@@ -17,12 +18,12 @@ class Calibrator:
         self.rvecs = []
         self.tvecs = []
 
-    def update_imgpaths(self, imgpaths):
+    def update_imgpaths(self, imgpaths: List[str]) -> None:
         """Update image paths."""
         self.imgpaths = imgpaths
         self.calibrated = False
 
-    def calibrate_camera(self):
+    def calibrate_camera(self) -> None:
         """Calibrate camera and store all relevant parameters."""
         # Prepare object points
         objp = np.zeros((np.prod(self.pattern_size), 3), np.float32)
@@ -39,9 +40,6 @@ class Calibrator:
                 self.imgpoints.append(corners)
                 self.corners.append(corners)
 
-        # Get image size
-        grayimg = cv2.imread(self.imgpaths[0], cv2.IMREAD_GRAYSCALE)
-
         # Calibrate camera
         (
             _,
@@ -56,14 +54,14 @@ class Calibrator:
         # Set flag
         self.calibrated = True
 
-    def draw_corners(self):
+    def draw_corners(self) -> None:
         """Draw corners of chessboard in each images."""
         if not self.calibrated:
             self.calibrate_camera()
 
         # Draw chessboard corners onto the image
         for filepath, corners in zip(self.imgpaths, self.corners):
-            image = cv2.imread(filepath, cv2.IMREAD_COLOR)
+            image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
             cv2.drawChessboardCorners(image, self.pattern_size, corners, True)
 
             # Show image
@@ -72,7 +70,7 @@ class Calibrator:
 
         cv2.destroyAllWindows()
 
-    def print_intrinsic(self):
+    def print_intrinsic(self) -> None:
         """Print intrinsic matrix of camera."""
         if not self.calibrated:
             self.calibrate_camera()
@@ -81,7 +79,7 @@ class Calibrator:
         print("Intrinsic:")
         print(self.camera_matrix)
 
-    def print_extrinsic(self, idx):
+    def print_extrinsic(self, idx: int) -> None:
         """Print extrinsic matrix of camera for a given image."""
         if not self.calibrated:
             self.calibrate_camera()
@@ -95,7 +93,7 @@ class Calibrator:
         print("Extrinsic:")
         print(self.extrinsic_matrix)
 
-    def print_distortion(self):
+    def print_distortion(self) -> None:
         """Print distortion coefficients of camera."""
         if not self.calibrated:
             self.calibrate_camera()
@@ -104,14 +102,14 @@ class Calibrator:
         print("Distortion:")
         print(self.dist_coeffs)
 
-    def show_undistort(self):
+    def show_undistort(self) -> None:
         """Show undistorted images."""
         if not self.calibrated:
             self.calibrate_camera()
 
         # Show undistorted images
         for filepath in self.imgpaths:
-            image = cv2.imread(filepath, cv2.IMREAD_COLOR)
+            image = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
             image_undistort = cv2.undistort(image, self.camera_matrix, self.dist_coeffs)  # type: ignore
 
             # Show image side by side

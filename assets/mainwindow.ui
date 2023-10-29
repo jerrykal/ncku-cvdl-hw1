@@ -196,6 +196,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="maxLength">
+      <number>6</number>
+     </property>
     </widget>
     <widget class="QPushButton" name="btnQ21">
      <property name="geometry">
@@ -437,7 +440,7 @@ Images</string>
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>24</height>
+     <height>42</height>
     </rect>
    </property>
   </widget>

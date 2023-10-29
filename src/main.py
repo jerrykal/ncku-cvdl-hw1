@@ -7,7 +7,7 @@ from ui.mainwindow import Ui_MainWindow
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    def __init__(self):
+    def __init__(self) -> None:
         super(MainWindow, self).__init__()
         self.setupUi(self)
 
@@ -27,6 +27,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.btnQ15.clicked.connect(self.calibrator.show_undistort)
 
     def load_folder(self):
+    def load_folder(self) -> None:
         """Load a folder of images."""
         # Get image paths
         self.imgpaths = []
