@@ -5,6 +5,7 @@ from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow
 
 import calibrate
+import stereo
 from ui.mainwindow import Ui_MainWindow
 
 
@@ -14,10 +15,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.imgpaths = []
+        self.img_l_path = None
+        self.img_r_path = None
         self.calibrator = calibrate.Calibrator([])
 
         # Connect signals and slots
         self.btnLoadFolder.clicked.connect(self.load_folder)
+        self.btnLoadImgL.clicked.connect(self.load_image_l)
+        self.btnLoadImgR.clicked.connect(self.load_image_r)
 
         # Q1
         self.btnQ11.clicked.connect(self.calibrator.draw_corners)
@@ -35,12 +40,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Q2
         self.btnQ21.clicked.connect(
-            lambda word: self.calibrator.project_word(self.lineEditQ2.text())
+            lambda: self.calibrator.project_word(self.lineEditQ2.text())
         )
         self.btnQ22.clicked.connect(
-            lambda word: self.calibrator.project_word(
-                self.lineEditQ2.text(), vertical=True
-            )
+            lambda: self.calibrator.project_word(self.lineEditQ2.text(), vertical=True)
+        )
+
+        # Q3
+        self.btnQ31.clicked.connect(
+            lambda: stereo.stereo_disparity_map(self.img_l_path, self.img_r_path)
         )
 
     def load_folder(self) -> None:
@@ -62,6 +70,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Update combo box
         self.cmbQ13.clear()
         self.cmbQ13.addItems([str(i + 1) for i in range(len(self.imgpaths))])
+
+    def load_image_l(self) -> None:
+        self.img_l_path = QFileDialog.getOpenFileName(
+            filter="Image files (*.jpg *.png *.jpeg *.bmp)"
+        )[0]
+
+    def load_image_r(self) -> None:
+        self.img_r_path = QFileDialog.getOpenFileName(
+            filter="Image files (*.jpg *.png *.jpeg *.bmp)"
+        )[0]
 
 
 if __name__ == "__main__":
