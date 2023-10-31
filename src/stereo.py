@@ -7,6 +7,9 @@ def stereo_disparity_map(img_l_path, img_r_path):
     Compute disparity map from stereo images.
     And draw correspondence on the right image when clicked on the left image.
     """
+    if img_l_path == "" or img_r_path == "":
+        return
+
     image_l = cv2.imread(img_l_path)
     image_r = cv2.imread(img_r_path)
 

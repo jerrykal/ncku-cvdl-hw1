@@ -45,6 +45,13 @@ class Calibrator:
         """Update image paths."""
         self.imgpaths = imgpaths
         self.calibrated = False
+        self.corners = []
+        self.objpoints = []
+        self.imgpoints = []
+        self.camera_matrix: np.ndarray = np.zeros((3, 3))
+        self.dist_coeffs: np.ndarray = np.zeros((1, 5))
+        self.rvecs = []
+        self.tvecs = []
 
     def calibrate_camera(self) -> None:
         """Calibrate camera and store all relevant parameters."""
@@ -85,6 +92,9 @@ class Calibrator:
 
     def draw_corners(self) -> None:
         """Draw corners of chessboard in each images."""
+        if len(self.imgpaths) == 0:
+            return
+
         if not self.calibrated:
             self.calibrate_camera()
 
@@ -101,6 +111,9 @@ class Calibrator:
 
     def print_intrinsic(self) -> None:
         """Print intrinsic matrix of camera."""
+        if len(self.imgpaths) == 0:
+            return
+
         if not self.calibrated:
             self.calibrate_camera()
 
@@ -110,6 +123,9 @@ class Calibrator:
 
     def print_extrinsic(self, idx: int) -> None:
         """Print extrinsic matrix of camera for a given image."""
+        if len(self.imgpaths) == 0:
+            return
+
         if not self.calibrated:
             self.calibrate_camera()
 
@@ -124,6 +140,9 @@ class Calibrator:
 
     def print_distortion(self) -> None:
         """Print distortion coefficients of camera."""
+        if len(self.imgpaths) == 0:
+            return
+
         if not self.calibrated:
             self.calibrate_camera()
 
@@ -133,6 +152,9 @@ class Calibrator:
 
     def show_undistort(self) -> None:
         """Show undistorted images."""
+        if len(self.imgpaths) == 0:
+            return
+
         if not self.calibrated:
             self.calibrate_camera()
 
@@ -150,6 +172,9 @@ class Calibrator:
 
     def project_word(self, word: str, vertical: bool = False) -> None:
         """Project a word onto the chessboard."""
+        if len(self.imgpaths) == 0:
+            return
+
         if not self.calibrated:
             self.calibrate_camera()
 

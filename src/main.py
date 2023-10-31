@@ -15,8 +15,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.imgpaths = []
-        self.img_l_path = None
-        self.img_r_path = None
+        self.img_l_path = ""
+        self.img_r_path = ""
+        self.img_sift_path_1 = ""
+        self.img_sift_path_2 = ""
         self.calibrator = calibrate.Calibrator([])
 
         # Connect signals and slots
