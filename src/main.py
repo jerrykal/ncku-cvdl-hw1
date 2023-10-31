@@ -5,6 +5,7 @@ from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow
 
 import calibrate
+import sift
 import stereo
 from ui.mainwindow import Ui_MainWindow
 
@@ -53,6 +54,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             lambda: stereo.stereo_disparity_map(self.img_l_path, self.img_r_path)
         )
 
+        # Q4
+        self.btnSIFTLoadImg1.clicked.connect(self.load_sift_image_1)
+        self.btnSIFTLoadImg2.clicked.connect(self.load_sift_image_2)
+        self.btnQ41.clicked.connect(lambda: sift.draw_keypoints(self.img_sift_path_1))
+        self.btnQ42.clicked.connect(
+            lambda: sift.draw_matched_keypoints(
+                self.img_sift_path_1, self.img_sift_path_2
+            )
+        )
+
     def load_folder(self) -> None:
         """Load a folder of images."""
         # Get image paths
@@ -80,6 +91,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def load_image_r(self) -> None:
         self.img_r_path = QFileDialog.getOpenFileName(
+            filter="Image files (*.jpg *.png *.jpeg *.bmp)"
+        )[0]
+
+    def load_sift_image_1(self) -> None:
+        self.img_sift_path_1 = QFileDialog.getOpenFileName(
+            filter="Image files (*.jpg *.png *.jpeg *.bmp)"
+        )[0]
+
+    def load_sift_image_2(self) -> None:
+        self.img_sift_path_2 = QFileDialog.getOpenFileName(
             filter="Image files (*.jpg *.png *.jpeg *.bmp)"
         )[0]
 
