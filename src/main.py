@@ -65,7 +65,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
     def load_folder(self) -> None:
-        """Load a folder of images."""
+        """Load a folder of chessboard images for Q1 and Q2."""
         # Get image paths
         self.imgpaths = []
         folder = QFileDialog.getExistingDirectory()
@@ -85,21 +85,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cmbQ13.addItems([str(i + 1) for i in range(len(self.imgpaths))])
 
     def load_image_l(self) -> None:
+        """Load left stereo image for Q3."""
         self.img_l_path = QFileDialog.getOpenFileName(
             filter="Image files (*.jpg *.png *.jpeg *.bmp)"
         )[0]
 
     def load_image_r(self) -> None:
+        """Load right stereo image for Q3."""
         self.img_r_path = QFileDialog.getOpenFileName(
             filter="Image files (*.jpg *.png *.jpeg *.bmp)"
         )[0]
 
     def load_sift_image_1(self) -> None:
+        """Load first image for Q4."""
         self.img_sift_path_1 = QFileDialog.getOpenFileName(
             filter="Image files (*.jpg *.png *.jpeg *.bmp)"
         )[0]
 
     def load_sift_image_2(self) -> None:
+        """Load second image for Q4."""
         self.img_sift_path_2 = QFileDialog.getOpenFileName(
             filter="Image files (*.jpg *.png *.jpeg *.bmp)"
         )[0]
