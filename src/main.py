@@ -15,7 +15,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__()
         self.setupUi(self)
 
-        self.imgpaths = []
         self.img_l_path = ""
         self.img_r_path = ""
         self.img_sift_path_1 = ""
@@ -67,22 +66,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def load_folder(self) -> None:
         """Load a folder of chessboard images for Q1 and Q2."""
         # Get image paths
-        self.imgpaths = []
+        imgpaths = []
         folder = QFileDialog.getExistingDirectory()
         for dirpath, _, filenames in os.walk(folder):
             for file in filenames:
                 if file.endswith(("jpg", "png", "jpeg", "bmp")):
-                    self.imgpaths.append(os.path.join(dirpath, file))
+                    imgpaths.append(os.path.join(dirpath, file))
 
         # Sort image paths
-        self.imgpaths.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0]))
+        imgpaths.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0]))
 
         # Update calibrator
-        self.calibrator.update_imgpaths(self.imgpaths)
+        self.calibrator.update_imgpaths(imgpaths)
 
         # Update combo box
         self.cmbQ13.clear()
-        self.cmbQ13.addItems([str(i + 1) for i in range(len(self.imgpaths))])
+        self.cmbQ13.addItems([str(i + 1) for i in range(len(imgpaths))])
 
     def load_image_l(self) -> None:
         """Load left stereo image for Q3."""
