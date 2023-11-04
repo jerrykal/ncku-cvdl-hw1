@@ -409,16 +409,6 @@ Images</string>
       <string>Predict =</string>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="predImgView">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>300</y>
-       <width>181</width>
-       <height>181</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QLabel" name="lblPredResult">
      <property name="geometry">
       <rect>
@@ -432,6 +422,25 @@ Images</string>
       <string/>
      </property>
     </widget>
+    <widget class="QLabel" name="lblInferenceImg">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>310</y>
+       <width>128</width>
+       <height>128</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Inference Image</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -440,7 +449,7 @@ Images</string>
      <x>0</x>
      <y>0</y>
      <width>900</width>
-     <height>42</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
