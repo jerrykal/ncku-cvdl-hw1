@@ -108,9 +108,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def load_folder(self) -> None:
         """Load a folder of chessboard images for Q1 and Q2."""
         # Get image paths
-        imgpaths = []
         directory = QFileDialog.getExistingDirectory()
-        for filename in sorted(os.listdir(directory)):
+        if directory == "":
+            return
+
+        imgpaths = []
+        for filename in sorted(
+            os.listdir(directory), key=lambda x: int(x.split(".")[0])
+        ):
             if filename.endswith(("jpg", "png", "jpeg", "bmp")):
                 imgpaths.append(os.path.join(directory, filename))
 

@@ -26,7 +26,7 @@ def stereo_disparity_map(img_l_path, img_r_path):
     # Draw correspondence on the right image
     cv2.namedWindow("imgL")
     param = [image_r, disparity]
-    cv2.setMouseCallback("imgL", draw_correspondence, param)
+    cv2.setMouseCallback("imgL", draw_correspondence, param)  # type: ignore
 
     # Show images
     cv2.imshow("imgL", image_l)

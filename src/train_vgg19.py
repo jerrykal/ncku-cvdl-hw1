@@ -15,8 +15,6 @@ transforms_train = v2.Compose(
         v2.RandomResizedCrop(32, scale=(0.8, 1.0), ratio=(1.0, 1.0)),
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
-        # Mean and std derived from: https://github.com/kuangliu/pytorch-cifar/issues/19
-        # v2.Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.243, 0.261)),
     ]
 )
 
@@ -24,7 +22,6 @@ transforms_test = v2.Compose(
     [
         v2.ToImage(),
         v2.ToDtype(torch.float32, scale=True),
-        # v2.Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.243, 0.261)),
     ]
 )
 

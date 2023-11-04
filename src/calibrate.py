@@ -23,9 +23,7 @@ class Calibrator:
         # Q2
         fs = cv2.FileStorage(
             os.path.abspath(
-                os.path.join(
-                    __file__, os.pardir, "Q2_lib", "alphabet_lib_onboard.txt"
-                )
+                os.path.join(__file__, os.pardir, "Q2_lib", "alphabet_lib_onboard.txt")
             ),
             cv2.FILE_STORAGE_READ,
         )
@@ -35,9 +33,7 @@ class Calibrator:
 
         fs = cv2.FileStorage(
             os.path.abspath(
-                os.path.join(
-                    __file__, os.pardir, "Q2_lib", "alphabet_lib_vertical.txt"
-                )
+                os.path.join(__file__, os.pardir, "Q2_lib", "alphabet_lib_vertical.txt")
             ),
             cv2.FILE_STORAGE_READ,
         )
@@ -73,6 +69,13 @@ class Calibrator:
             # Find chessboard corners
             found, corners = cv2.findChessboardCorners(grayimg, self.pattern_size, None)
             if found:
+                corners = cv2.cornerSubPix(
+                    grayimg,
+                    corners,
+                    (5, 5),
+                    (-1, -1),
+                    (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001),
+                )
                 self.objpoints.append(objp)
                 self.imgpoints.append(corners)
                 self.corners.append(corners)
@@ -109,7 +112,9 @@ class Calibrator:
 
             # Show image
             cv2.imshow("Chessboard Corners", image)
-            cv2.waitKey(0)
+
+            # Wait for 1 second
+            cv2.waitKey(1000)
 
         cv2.destroyAllWindows()
 
@@ -170,7 +175,9 @@ class Calibrator:
             # Show image side by side
             image_concat = np.concatenate((image, image_undistort), axis=1)
             cv2.imshow("Distorted vs Undistorted Image", image_concat)
-            cv2.waitKey(0)
+
+            # Wait for 1 second
+            cv2.waitKey(1000)
 
         cv2.destroyAllWindows()
 
@@ -211,6 +218,8 @@ class Calibrator:
 
             # Show image
             cv2.imshow("AR", image)
-            cv2.waitKey(0)
+
+            # Wait for 1 second
+            cv2.waitKey(1000)
 
         cv2.destroyAllWindows()
