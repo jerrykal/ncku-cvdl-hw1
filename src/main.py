@@ -67,14 +67,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """Load a folder of chessboard images for Q1 and Q2."""
         # Get image paths
         imgpaths = []
-        folder = QFileDialog.getExistingDirectory()
-        for dirpath, _, filenames in os.walk(folder):
-            for file in filenames:
-                if file.endswith(("jpg", "png", "jpeg", "bmp")):
-                    imgpaths.append(os.path.join(dirpath, file))
-
-        # Sort image paths
-        imgpaths.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0]))
+        directory = QFileDialog.getExistingDirectory()
+        for filename in sorted(os.listdir(directory)):
+            if filename.endswith(("jpg", "png", "jpeg", "bmp")):
+                imgpaths.append(os.path.join(directory, filename))
 
         # Update calibrator
         self.calibrator.update_imgpaths(imgpaths)

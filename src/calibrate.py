@@ -22,8 +22,10 @@ class Calibrator:
 
         # Q2
         fs = cv2.FileStorage(
-            os.path.join(
-                os.path.dirname(__file__), "Q2_lib", "alphabet_lib_onboard.txt"
+            os.path.abspath(
+                os.path.join(
+                    __file__, os.pardir, "Q2_lib", "alphabet_lib_onboard.txt"
+                )
             ),
             cv2.FILE_STORAGE_READ,
         )
@@ -32,8 +34,10 @@ class Calibrator:
             self.ar_alphabet[alphabet] = fs.getNode(alphabet).mat()
 
         fs = cv2.FileStorage(
-            os.path.join(
-                os.path.dirname(__file__), "Q2_lib", "alphabet_lib_vertical.txt"
+            os.path.abspath(
+                os.path.join(
+                    __file__, os.pardir, "Q2_lib", "alphabet_lib_vertical.txt"
+                )
             ),
             cv2.FILE_STORAGE_READ,
         )
